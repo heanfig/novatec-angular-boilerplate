@@ -14,7 +14,7 @@ RUN npm run build --prod
 
 ### STAGE 2:RUN ###
 
-FROM nginx:1.17.1-alpine AS ngi
+FROM nginx:1.17 AS ngi
 
 COPY --from=build /dist/src/app/dist/apps/demo /usr/share/nginx/html
 
