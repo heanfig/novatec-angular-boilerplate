@@ -14,10 +14,10 @@ RUN npm run build --prod
 
 ### STAGE 2:RUN ###
 
-FROM nginx:latest AS ngi
+FROM nginx:1.17.1-alpine AS ngi
 
 COPY --from=build /dist/src/app/dist/apps/demo /usr/share/nginx/html
 
-COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
+## COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
