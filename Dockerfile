@@ -1,13 +1,23 @@
-FROM nginx:1.13.3-alpine
+### STAGE 1:BUILD ###
 
-COPY nginx/ /etc/nginx/conf.d/
+FROM node:14 AS build
 
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /dist/src/app
 
-RUN ["npm", "run", "build"]
+RUN npm cache clean --force
 
-COPY dist/ /usr/share/nginx/html
+COPY . .
 
-EXPOSE 8080
+RUN npm install
 
-CMD ["nginx", "-g", "daemon off;"]
+RUN npm run build --prod
+
+### STAGE 2:RUN ###
+
+FROM nginx:latest AS ngi
+
+COPY --from=build /dist/src/app/dist/apps/demo /usr/share/nginx/html
+
+COPY ./nginx.conf  /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
